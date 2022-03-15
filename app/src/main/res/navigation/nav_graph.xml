@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_main">
+
+    <fragment
+        android:id="@+id/navigation_main"
+        android:name="com.example.jf.presentation.MainFragment"
+        android:label="TextViewFragment" />
+
+    <fragment
+        android:id="@+id/navigation_cities"
+        android:name="com.example.jf.presentation.CitiesFragment"
+        android:label="ListTitlesFragment" />
+
+    <fragment
+        android:id="@+id/navigation_other"
+        android:name="com.example.jf.presentation.OtherFragment"
+        android:label="ListCardViewsFragment" />
+
+</navigation>

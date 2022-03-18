@@ -3,4 +3,5 @@
     <string name="posts">Лента</string>
     <string name="cities">Города</string>
     <string name="other">Дополнительно</string>
+    <string name="no_location">Не удалось получить местоположение</string>
 </resources>

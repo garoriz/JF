@@ -1,11 +1,9 @@
 package com.example.jf.data.api
 
 import com.example.jf.data.api.response.cities.CitiesResponse
-import com.example.jf.data.api.response.wiki.Wiki
-import retrofit2.http.GET
-import retrofit2.http.Headers
+import retrofit2.http.*
 
 interface Api {
-    @GET("cities")
-    suspend fun getCities(): CitiesResponse
+    @GET("v1/geo/locations/{coordinates}/nearbyCities")
+    suspend fun getCities(@Path("coordinates") coordinates: String): CitiesResponse
 }

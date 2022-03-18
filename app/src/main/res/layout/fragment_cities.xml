@@ -7,29 +7,29 @@
     tools:context=".presentation.CitiesFragment">
 
     <TextView
-        android:id="@+id/tv_cities"
+    android:id="@+id/tv_cities"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/cities"
+    android:textColor="@color/black"
+    android:textSize="32sp"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_no_cities"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/cities"
+        android:text="@string/no_location"
         android:textColor="@color/black"
         android:textSize="32sp"
+        android:visibility="gone"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_cities"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
-
-    <SearchView
-        android:id="@+id/sv_city"
-        android:layout_width="401dp"
-        android:layout_height="37dp"
-        android:layout_margin="8dp"
-        android:layout_marginTop="4dp"
-        android:iconifiedByDefault="false"
-        android:queryHint="Поиск..."
-        app:layout_constraintHorizontal_bias="0.428"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_cities" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cities"
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/sv_city"
+        app:layout_constraintTop_toBottomOf="@id/tv_cities"
         tools:itemCount="3"
         tools:listitem="@layout/item_city" />
 

@@ -4,4 +4,11 @@
     <string name="cities">Города</string>
     <string name="other">Дополнительно</string>
     <string name="no_location">Не удалось получить местоположение</string>
+    <string name="nick">Никнейм</string>
+    <string name="password">Пароль</string>
+    <string name="login">Войти</string>
+    <string name="registration">Регистрация</string>
+    <string name="confirm_password">Подтвердите пароль</string>
+    <string name="max_30_symbols_password">Пароль должен содержать максимум 30 символов</string>
+    <string name="password_contains_space">Пароль не должен содержать пробел</string>
 </resources>

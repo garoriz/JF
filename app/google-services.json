@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "712365173770",
+    "project_id": "jf-forum-f415b",
+    "storage_bucket": "jf-forum-f415b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:712365173770:android:c0df39c765b6993395c3f3",
+        "android_client_info": {
+          "package_name": "com.example.jf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "712365173770-jmbqgknfo8qen0m03e5qahpg02ju2q7s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8kP45_oDAE9eBTaS26M8HnlQXfjoF_rk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "712365173770-jmbqgknfo8qen0m03e5qahpg02ju2q7s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

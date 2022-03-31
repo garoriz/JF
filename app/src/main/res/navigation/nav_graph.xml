@@ -1,22 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/navigation_main">
 
     <fragment
         android:id="@+id/navigation_main"
-        android:name="com.example.jf.presentation.MainFragment"
-        android:label="TextViewFragment" />
+        android:name="com.example.jf.features.main.MainFragment"
+        android:label="TextViewFragment">
+        <action
+            android:id="@+id/action_navigation_main_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_cities"
-        android:name="com.example.jf.presentation.CitiesFragment"
-        android:label="ListTitlesFragment" />
+        android:name="com.example.jf.features.cities.presentation.CitiesFragment"
+        android:label="ListTitlesFragment">
+        <action
+            android:id="@+id/action_navigation_cities_to_articleFragment"
+            app:destination="@id/articleFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_other"
-        android:name="com.example.jf.presentation.OtherFragment"
+        android:name="com.example.jf.features.other.OtherFragment"
         android:label="ListCardViewsFragment" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.jf.features.login.presentation.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.example.jf.features.registration.RegistrationFragment"
+        android:label="fragment_registration"
+        tools:layout="@layout/fragment_registration">
+        <action
+            android:id="@+id/action_registrationFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_registrationFragment_to_navigation_main"
+            app:destination="@id/navigation_main" />
+    </fragment>
+    <fragment
+        android:id="@+id/articleFragment"
+        android:name="com.example.jf.features.article.presentation.ArticleFragment"
+        android:label="ArticleFragment" />
 
 </navigation>

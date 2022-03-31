@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">JF</string>
     <string name="posts">Лента</string>
-    <string name="cities">Города</string>
+    <string name="cities">Ближайшие города</string>
     <string name="other">Дополнительно</string>
+    <string name="error_getting_location">Не удалось получить местоположение</string>
+    <string name="error_check_permission">Будут показаны ближайшие города к Москве.
+        Дайте разрешение для определения вашего местопололожения</string>
+    <string name="permission">Разрешение</string>
+    <string name="ok">OK</string>
+    <string name="no">Нет</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_location">Не удалось получить местоположение</string>
     <string name="nick">Никнейм</string>
     <string name="password">Пароль</string>
     <string name="login">Войти</string>
     <string name="registration">Регистрация</string>
     <string name="confirm_password">Подтвердите пароль</string>
+    <string name="error">Ошибка</string>
+    <string name="email">Email</string>
+    <string name="empty_nick">Никнейм не должен быть пустым</string>
+    <string name="empty_email">Email не должен быть пустым</string>
+    <string name="not_the_same_passwords">Пароли не совпадают</string>
+    <string name="min_6_symbols_password">Пароль должен содержать минимум 6 символов</string>
     <string name="max_30_symbols_password">Пароль должен содержать максимум 30 символов</string>
     <string name="password_contains_space">Пароль не должен содержать пробел</string>
+    <string name="source_wikipedia">Источник: Википедия</string>
+    <string name="no_internet">Ошибка. Проверьте подключение к интернету</string>
 </resources>

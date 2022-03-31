@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">JF</string>
     <string name="posts">Лента</string>
-    <string name="cities">Города</string>
+    <string name="cities">Ближайшие города</string>
     <string name="other">Дополнительно</string>
     <string name="error_getting_location">Не удалось получить местоположение</string>
     <string name="error_check_permission">Будут показаны ближайшие города к Москве.
@@ -25,4 +25,6 @@
     <string name="min_6_symbols_password">Пароль должен содержать минимум 6 символов</string>
     <string name="max_30_symbols_password">Пароль должен содержать максимум 30 символов</string>
     <string name="password_contains_space">Пароль не должен содержать пробел</string>
+    <string name="source_wikipedia">Источник: Википедия</string>
+    <string name="no_internet">Ошибка. Проверьте подключение к интернету</string>
 </resources>

@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.jf"
-        minSdk 24
+        minSdk 21
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -67,6 +67,8 @@ dependencies {
     implementation 'io.coil-kt:coil:1.4.0'
 
     implementation 'com.google.android.gms:play-services-location:19.0.1'
+
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 }
 
 detekt {

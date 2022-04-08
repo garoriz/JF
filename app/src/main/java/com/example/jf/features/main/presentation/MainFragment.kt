@@ -1,4 +1,4 @@
-package com.example.jf.features.main
+package com.example.jf.features.main.presentation
 
 import android.os.Bundle
 import android.view.View
@@ -9,11 +9,13 @@ import com.example.jf.databinding.FragmentMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 
 
 class MainFragment : Fragment(R.layout.fragment_main) {
     private lateinit var binding: FragmentMainBinding
     private lateinit var auth: FirebaseAuth
+    private val storageRef = Firebase.storage.reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,19 +32,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         with(binding) {
             if (currentUser != null)
-                btnExit.visibility = View.VISIBLE
+                ivAvatar.setOnClickListener {
+                    auth.signOut()
+                }
             else
-                btnLogin.visibility = View.VISIBLE
-
-            btnLogin.setOnClickListener {
-                view.findNavController().navigate(R.id.action_navigation_main_to_loginFragment)
-            }
-
-            btnExit.setOnClickListener {
-                Firebase.auth.signOut()
-                btnExit.visibility = View.GONE
-                btnLogin.visibility = View.VISIBLE
-            }
+                ivAvatar.setOnClickListener {
+                    view.findNavController().navigate(R.id.action_navigation_main_to_loginFragment)
+                }
         }
     }
 }

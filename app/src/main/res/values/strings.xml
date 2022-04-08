@@ -27,4 +27,17 @@
     <string name="password_contains_space">Пароль не должен содержать пробел</string>
     <string name="source_wikipedia">Источник: Википедия</string>
     <string name="no_internet">Ошибка. Проверьте подключение к интернету</string>
+    <string name="text">Текст…</string>
+    <string name="send">Отправить</string>
+    <string name="post_sent">Пост опубликован</string>
+    <string name="add_media">Закрепить медиа</string>
+    <string name="zero">0</string>
+    <string name="added_files">Прикреплено файлов:</string>
+    <string name="photo">Фото</string>
+    <string name="video">Видео</string>
+    <string name="music">Музыка</string>
+    <string name="loading">Идёт загрузка файла</string>
+    <string name="loading_success">Файл успешно загружен</string>
+    <string name="max_count_files">Нельзя загружать более 10 файлов</string>
+    <string name="post_is_empty">Пост не может быть пустым</string>
 </resources>

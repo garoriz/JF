@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_main"
-        android:name="com.example.jf.features.main.MainFragment"
+        android:name="com.example.jf.features.main.presentation.MainFragment"
         android:label="TextViewFragment">
         <action
             android:id="@+id/action_navigation_main_to_loginFragment"
@@ -26,7 +26,11 @@
     <fragment
         android:id="@+id/navigation_other"
         android:name="com.example.jf.features.other.OtherFragment"
-        android:label="ListCardViewsFragment" />
+        android:label="ListCardViewsFragment" >
+        <action
+            android:id="@+id/action_navigation_other_to_newPostFragment"
+            app:destination="@id/newPostFragment" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.jf.features.login.presentation.LoginFragment"
@@ -52,5 +56,10 @@
         android:id="@+id/articleFragment"
         android:name="com.example.jf.features.article.presentation.ArticleFragment"
         android:label="ArticleFragment" />
+    <fragment
+        android:id="@+id/newPostFragment"
+        android:name="com.example.jf.features.newPost.presentation.NewPostFragment"
+        android:label="fragment_new_post"
+        tools:layout="@layout/fragment_new_post" />
 
 </navigation>

@@ -9,16 +9,23 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.jf.R
 import com.example.jf.databinding.FragmentNewPostBinding
-import com.example.jf.features.newPost.presentation.domain.model.Post
+import com.example.jf.features.newPost.domain.model.Post
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import com.instacart.library.truetime.TrueTime
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class NewPostFragment : Fragment(R.layout.fragment_new_post) {
 
     private lateinit var binding: FragmentNewPostBinding
+    private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private val storageRef = Firebase.storage.reference
     private var countMedia = 0
@@ -34,6 +41,12 @@ class NewPostFragment : Fragment(R.layout.fragment_new_post) {
     }
     private val selectMusicFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let { uploadFile(uri, "musics") }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        auth = Firebase.auth
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,7 +77,13 @@ class NewPostFragment : Fragment(R.layout.fragment_new_post) {
 
         with (binding) {
             tvSend.setOnClickListener {
-                val post = Post(etText.text.toString(), urlsPhoto, urlsVideo, urlsMusic)
+                val post = Post(
+                    auth.currentUser?.displayName,
+                    etText.text.toString(),
+                    urlsPhoto,
+                    urlsVideo,
+                    urlsMusic
+                )
 
                 if (post.text == "" &&
                     urlsPhoto.isEmpty()  &&
@@ -100,7 +119,7 @@ class NewPostFragment : Fragment(R.layout.fragment_new_post) {
         }
         val path = "${type}/${uri.lastPathSegment}"
         val uploadTask = storageRef.child(path).putFile(uri)
-        showMessage(R.string.loading)
+        showMessage(R.string.loading_file)
 
         uploadTask.addOnFailureListener {
             showMessage(R.string.no_internet)

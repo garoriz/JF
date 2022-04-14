@@ -1,7 +1,7 @@
 package com.example.jf.features.cities.presentation.diffutils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.jf.features.cities.domain.model.City
+import com.example.jf.features.cities.domain.entity.City
 
 class CityDiffItemCallback : DiffUtil.ItemCallback<City>() {
     override fun areItemsTheSame(

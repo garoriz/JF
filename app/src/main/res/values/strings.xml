@@ -36,8 +36,10 @@
     <string name="photo">Фото</string>
     <string name="video">Видео</string>
     <string name="music">Музыка</string>
-    <string name="loading">Идёт загрузка файла</string>
+    <string name="loading_file">Идёт загрузка файла</string>
     <string name="loading_success">Файл успешно загружен</string>
     <string name="max_count_files">Нельзя загружать более 10 файлов</string>
     <string name="post_is_empty">Пост не может быть пустым</string>
+    <string name="update">Обновить</string>
+    <string name="loading">Загрузка…</string>
 </resources>

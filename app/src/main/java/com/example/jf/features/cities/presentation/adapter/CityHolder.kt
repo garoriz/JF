@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.jf.databinding.ItemCityBinding
-import com.example.jf.features.cities.domain.model.City
+import com.example.jf.features.cities.domain.entity.City
 
 class CityHolder(
     private val binding: ItemCityBinding,

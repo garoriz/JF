@@ -1,5 +1,6 @@
 package com.example.jf.features.registration
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.ViewCompat
@@ -11,6 +12,7 @@ import com.example.jf.databinding.FragmentRegistrationBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 
 
@@ -40,7 +42,7 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
                 val password = etPassword.text.toString()
                 val confirmedPassword = etConfirmedPassword.text.toString()
                 if (checkCredentials(nick, email, password, confirmedPassword)) {
-                    createUser(email, password)
+                    createUser(nick, email, password)
                 }
                 ViewCompat.getWindowInsetsController(requireView())
                     ?.hide(WindowInsetsCompat.Type.ime())
@@ -81,15 +83,32 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
         return true
     }
 
-    private fun createUser(email: String, password: String) {
+    private fun createUser(nick: String, email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    updateProfile(nick)
+                } else {
+                    showMessage(R.string.no_internet)
+                }
+            }
+    }
+
+    private fun updateProfile(nick: String) {
+        val user = Firebase.auth.currentUser
+
+        val profileUpdates = userProfileChangeRequest {
+            displayName = nick
+            photoUri =
+                Uri.parse("https://firebasestorage.googleapis.com/v0/b/jf-forum-f415b.appspot.com/o/utils%2Findex.png?alt=media&token=fe7ea5f2-b733-432c-9899-76c87d963ec8")
+        }
+
+        user!!.updateProfile(profileUpdates)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     view?.findNavController()?.navigate(
                         R.id.action_registrationFragment_to_navigation_main
                     )
-                } else {
-                    showMessage(R.string.no_internet)
                 }
             }
     }

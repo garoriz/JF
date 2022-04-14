@@ -2,7 +2,7 @@ package com.example.jf.features.cities.presentation.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.example.jf.features.cities.domain.model.City
+import com.example.jf.features.cities.domain.entity.City
 import com.example.jf.features.cities.presentation.diffutils.CityDiffItemCallback
 
 class CityListAdapter(

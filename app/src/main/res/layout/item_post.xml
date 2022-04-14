@@ -6,6 +6,18 @@
     android:layout_height="wrap_content">
 
     <TextView
+        android:id="@+id/tv_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="12sp"
+        app:layout_constraintHorizontal_bias=".7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Ризван Гарипов" />
+
+    <TextView
         android:id="@+id/tv_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,7 +26,7 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_author"
         tools:text="Привет мир" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

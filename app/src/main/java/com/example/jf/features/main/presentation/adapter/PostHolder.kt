@@ -1,26 +1,29 @@
 package com.example.jf.features.main.presentation.adapter
 
+import android.content.ContentProvider
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.example.jf.databinding.ItemPostBinding
-import com.example.jf.features.main.domain.model.Post
+import com.example.jf.features.main.domain.model.PostInList
 
 class PostHolder(
     private val binding: ItemPostBinding,
     private val action: (String) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private var post: Post? = null
+    private var postInList: PostInList? = null
 
     init {
         itemView.setOnClickListener {
-            post?.text?.also(action)
+            postInList?.id?.also(action)
         }
     }
 
-    fun bind(item: Post) {
-        this.post = item
+    fun bind(item: PostInList) {
+        this.postInList = item
         with(binding) {
             tvAuthor.text = item.author
             tvText.text = item.text

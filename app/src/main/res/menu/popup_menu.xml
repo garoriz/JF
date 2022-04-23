@@ -6,7 +6,4 @@
     <item
         android:id="@+id/video"
         android:title="@string/video" />
-    <item
-        android:id="@+id/music"
-        android:title="@string/music" />
 </menu>

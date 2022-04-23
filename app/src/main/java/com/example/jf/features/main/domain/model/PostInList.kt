@@ -1,12 +1,13 @@
 package com.example.jf.features.main.domain.model
 
+import com.example.jf.features.newPost.domain.model.Post
 import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
-data class Post(
+data class PostInList(
+    val id: String? = null,
     val author: String? = null,
     val text: String? = null,
-    val urlsPhoto: List<String>? = null,
-    val urlsVideo: List<String>? = null,
-    val urlsMusic: List<String>? = null,
+    val uriPhoto: String? = null,
+    val uriVideo: String? = null,
 )

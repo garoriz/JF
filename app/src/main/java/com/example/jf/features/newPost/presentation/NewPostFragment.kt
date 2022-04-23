@@ -31,16 +31,12 @@ class NewPostFragment : Fragment(R.layout.fragment_new_post) {
     private var countMedia = 0
     private val urlsPhoto = mutableListOf<String>()
     private val urlsVideo = mutableListOf<String>()
-    private val urlsMusic = mutableListOf<String>()
 
     private val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let { uploadFile(uri, "images") }
     }
     private val selectVideoFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let { uploadFile(uri, "videos") }
-    }
-    private val selectMusicFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let { uploadFile(uri, "musics") }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,9 +64,6 @@ class NewPostFragment : Fragment(R.layout.fragment_new_post) {
                 R.id.video -> {
                     selectVideoFromGallery()
                 }
-                R.id.music -> {
-                    selectMusicFromGallery()
-                }
             }
             false
         }
@@ -81,14 +74,12 @@ class NewPostFragment : Fragment(R.layout.fragment_new_post) {
                     auth.currentUser?.displayName,
                     etText.text.toString(),
                     urlsPhoto,
-                    urlsVideo,
-                    urlsMusic
+                    urlsVideo
                 )
 
                 if (post.text == "" &&
                     urlsPhoto.isEmpty()  &&
-                    urlsVideo.isEmpty() &&
-                    urlsMusic.isEmpty()
+                    urlsVideo.isEmpty()
                 ) {
                     showMessage(R.string.post_is_empty)
                     return@setOnClickListener
@@ -110,8 +101,6 @@ class NewPostFragment : Fragment(R.layout.fragment_new_post) {
 
     private fun selectVideoFromGallery() = selectVideoFromGalleryResult.launch("video/*")
 
-    private fun selectMusicFromGallery() = selectMusicFromGalleryResult.launch("audio/*")
-
     private fun uploadFile(uri: Uri, type: String) {
         if (countMedia == 10) {
             showMessage(R.string.max_count_files)
@@ -127,7 +116,6 @@ class NewPostFragment : Fragment(R.layout.fragment_new_post) {
             when (type) {
                 "images" -> urlsPhoto.add(path)
                 "videos" -> urlsVideo.add(path)
-                "musics" -> urlsMusic.add(path)
             }
             showMessage(R.string.loading_success)
             countMedia += 1

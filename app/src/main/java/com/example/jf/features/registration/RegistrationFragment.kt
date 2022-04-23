@@ -33,7 +33,7 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
 
         with(binding) {
             tvLogin.setOnClickListener {
-                view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+                view.findNavController().navigateUp()
             }
 
             btnRegistration.setOnClickListener {
@@ -99,8 +99,7 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
 
         val profileUpdates = userProfileChangeRequest {
             displayName = nick
-            photoUri =
-                Uri.parse("https://firebasestorage.googleapis.com/v0/b/jf-forum-f415b.appspot.com/o/utils%2Findex.png?alt=media&token=fe7ea5f2-b733-432c-9899-76c87d963ec8")
+            photoUri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/jf-forum-f415b.appspot.com/o/utils%2Findex.png?alt=media&token=fe7ea5f2-b733-432c-9899-76c87d963ec8")
         }
 
         user!!.updateProfile(profileUpdates)

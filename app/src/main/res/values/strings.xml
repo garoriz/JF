@@ -42,4 +42,15 @@
     <string name="post_is_empty">Пост не может быть пустым</string>
     <string name="update">Обновить</string>
     <string name="loading">Загрузка…</string>
+    <string name="error_loading_media">Не удалось загрузить медиа.
+        Проверьте подключение к интернету</string>
+    <string name="new_post">Новый пост</string>
+    <string name="sign_in_account">Войти в аккаунт</string>
+    <string name="exit">Выйти</string>
+    <string name="edit_profile">Редактировать профиль</string>
+    <string name="change_photo">Изменить фото</string>
+    <string name="save">Сохранить</string>
+    <string name="nick_">Никнейм:</string>
+    <string name="save_nick">Сохранить никнейм</string>
+    <string name="nick_saved_successfully">Никнейм успешно сохранён</string>
 </resources>

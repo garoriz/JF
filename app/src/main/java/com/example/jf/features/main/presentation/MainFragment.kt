@@ -2,14 +2,18 @@ package com.example.jf.features.main.presentation
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import coil.transform.CircleCropTransformation
 import com.example.jf.R
 import com.example.jf.databinding.FragmentMainBinding
-import com.example.jf.features.main.domain.model.Post
+import com.example.jf.features.main.domain.model.PostInList
 import com.example.jf.features.main.presentation.adapter.PostListAdapter
+import com.example.jf.features.newPost.domain.model.Post
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -18,6 +22,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
+private const val ARG_NAME = "id"
 
 class MainFragment : Fragment(R.layout.fragment_main) {
     private lateinit var binding: FragmentMainBinding
@@ -47,9 +52,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         with(binding) {
             if (currentUser != null) {
-                ivAvatar.load(currentUser.photoUrl)
-                ivAvatar.setOnClickListener {
-                    auth.signOut()
+                ivAvatar.load(currentUser.photoUrl) {
+                    transformations(CircleCropTransformation())
                 }
             }
             else
@@ -72,9 +76,16 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
                         posts.addValueEventListener(object : ValueEventListener {
                             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                val postList = mutableListOf<Post?>()
+                                val postList = mutableListOf<PostInList?>()
                                 for (postSnapshot in dataSnapshot.children) {
-                                    postList.add(postSnapshot.getValue(Post::class.java))
+                                    val post = postSnapshot.getValue(Post::class.java)
+                                    postList.add(PostInList(
+                                        postSnapshot.key,
+                                        post?.author,
+                                        post?.text,
+                                        post?.urisPhoto?.get(0),
+                                        post?.urisVideo?.get(0),
+                                    ))
                                 }
                                 postList.reverse()
 
@@ -100,9 +111,16 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         posts.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 binding.tvLoading.visibility = View.GONE
-                val postList = mutableListOf<Post?>()
+                val postList = mutableListOf<PostInList?>()
                 for (postSnapshot in dataSnapshot.children) {
-                    postList.add(postSnapshot.getValue(Post::class.java))
+                    val post = postSnapshot.getValue(Post::class.java)
+                    postList.add(PostInList(
+                        postSnapshot.key,
+                        post?.author,
+                        post?.text,
+                        post?.urisPhoto?.get(0),
+                        post?.urisVideo?.get(0),
+                    ))
                 }
                 postList.reverse()
                 postListAdapter = PostListAdapter {
@@ -110,8 +128,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     postListAdapter?.submitList(postList)
                 }
 
+                val decorator = DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
+
                 binding.posts.run {
                     adapter = postListAdapter
+                    addItemDecoration(decorator)
                 }
 
                 postListAdapter?.submitList(postList)
@@ -126,7 +147,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     private fun getAllPost(it: String) {
-
+        view?.findNavController()
+            ?.navigate(
+                R.id.action_navigation_main_to_postFragment,
+                bundleOf(ARG_NAME to it)
+            )
     }
 
     private fun showMessage(stringId: Int) {

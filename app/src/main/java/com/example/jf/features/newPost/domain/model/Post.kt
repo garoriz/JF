@@ -6,7 +6,6 @@ import com.google.firebase.database.IgnoreExtraProperties
 data class Post(
     val author: String? = null,
     val text: String? = null,
-    val urlsPhoto: List<String>? = null,
-    val urlsVideo: List<String>? = null,
-    val urlsMusic: List<String>? = null,
+    val urisPhoto: List<String>? = null,
+    val urisVideo: List<String>? = null,
 )

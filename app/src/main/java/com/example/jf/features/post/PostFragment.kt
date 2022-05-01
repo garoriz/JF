@@ -7,34 +7,49 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.os.bundleOf
 import androidx.core.view.marginTop
+import androidx.navigation.findNavController
 import coil.load
+import coil.transform.CircleCropTransformation
 import com.example.jf.R
 import com.example.jf.databinding.FragmentPostBinding
 import com.example.jf.features.newPost.domain.model.Post
+import com.example.jf.features.registration.domain.User
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
-private const val ARG_NAME = "id"
+private const val ARG_NAME_POST_ID = "id"
+private const val ARG_NAME_USER_UID = "uid"
 
 class PostFragment : Fragment(R.layout.fragment_post) {
     private lateinit var binding: FragmentPostBinding
     private lateinit var database: DatabaseReference
     private lateinit var layout: LinearLayout
     private val storageRef = Firebase.storage.reference
+    private lateinit var auth: FirebaseAuth
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        auth = Firebase.auth
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentPostBinding.bind(view)
+        val currentUser = auth.currentUser
         database =
             Firebase.database("https://jf-forum-f415b-default-rtdb.europe-west1.firebasedatabase.app/")
                 .reference
 
-        val id = arguments?.getString(ARG_NAME).toString()
+        val id = arguments?.getString(ARG_NAME_POST_ID).toString()
 
         database.child("posts").child(id).get().addOnSuccessListener { it ->
             val post = it.getValue(Post::class.java)
@@ -42,7 +57,15 @@ class PostFragment : Fragment(R.layout.fragment_post) {
                 tvLoading.visibility = View.GONE
                 layout = linearLayout
                 if (post != null) {
-                    tvAuthor.text = post.author
+                    post.userId?.let { it ->
+                        database.child("users").child(it).get().addOnSuccessListener {
+                            val user = it.getValue(User::class.java)
+                            ivAvatar.load(user?.urlPhoto) {
+                                transformations(CircleCropTransformation())
+                            }
+                            tvAuthor.text = user?.nick
+                        }
+                    }
                     tvContent.text = post.text
                     if (post.urisPhoto != null)
                         for (uriPhoto in post.urisPhoto) {
@@ -88,6 +111,19 @@ class PostFragment : Fragment(R.layout.fragment_post) {
                         }
                 }
                 scrollView.fullScroll(View.FOCUS_UP)
+                val uid = post?.userId
+                author.setOnClickListener {
+                    if (uid == currentUser?.uid)
+                        view.findNavController().navigate(
+                            R.id.action_postFragment_to_myProfileFragment
+                        )
+                    else {
+                        view.findNavController().navigate(
+                            R.id.action_postFragment_to_otherProfileFragment,
+                            bundleOf(ARG_NAME_USER_UID to uid)
+                        )
+                    }
+                }
             }
         }.addOnFailureListener {
             binding.tvLoading.visibility = View.GONE

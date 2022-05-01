@@ -55,6 +55,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 ivAvatar.load(currentUser.photoUrl) {
                     transformations(CircleCropTransformation())
                 }
+                ivAvatar.setOnClickListener {
+                    view.findNavController().navigate(R.id.action_navigation_main_to_myProfileFragment)
+                }
             }
             else
                 ivAvatar.setOnClickListener {
@@ -81,7 +84,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                                     val post = postSnapshot.getValue(Post::class.java)
                                     postList.add(PostInList(
                                         postSnapshot.key,
-                                        post?.author,
+                                        post?.userId,
                                         post?.text,
                                         post?.urisPhoto?.get(0),
                                         post?.urisVideo?.get(0),
@@ -116,7 +119,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     val post = postSnapshot.getValue(Post::class.java)
                     postList.add(PostInList(
                         postSnapshot.key,
-                        post?.author,
+                        post?.userId,
                         post?.text,
                         post?.urisPhoto?.get(0),
                         post?.urisVideo?.get(0),

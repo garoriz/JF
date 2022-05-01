@@ -53,4 +53,14 @@
     <string name="nick_">Никнейм:</string>
     <string name="save_nick">Сохранить никнейм</string>
     <string name="nick_saved_successfully">Никнейм успешно сохранён</string>
+    <string name="settings">Настройки</string>
+    <string name="change_password">Поменять пароль</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="change_password_2">Изменить пароль</string>
+    <string name="change_password_successfully">Пароль успешно изменён</string>
+    <string name="messages">Сообщения</string>
+    <string name="chat_with_user">Чат с пользователем</string>
+    <string name="see_all">Смотреть всё</string>
+    <string name="image">[Изображение]</string>
+    <string name="video_">[Видео]</string>
 </resources>

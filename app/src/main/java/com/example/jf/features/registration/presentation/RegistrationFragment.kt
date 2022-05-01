@@ -1,4 +1,4 @@
-package com.example.jf.features.registration
+package com.example.jf.features.registration.presentation
 
 import android.net.Uri
 import android.os.Bundle
@@ -9,21 +9,28 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.jf.R
 import com.example.jf.databinding.FragmentRegistrationBinding
+import com.example.jf.features.registration.domain.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 
 class RegistrationFragment : Fragment(R.layout.fragment_registration) {
     private lateinit var binding: FragmentRegistrationBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         auth = Firebase.auth
+        database =
+            Firebase.database("https://jf-forum-f415b-default-rtdb.europe-west1.firebasedatabase.app/")
+                .reference
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,7 +48,7 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
                 val email = etEmail.text.toString().trim()
                 val password = etPassword.text.toString()
                 val confirmedPassword = etConfirmedPassword.text.toString()
-                if (checkCredentials(nick, email, password, confirmedPassword)) {
+                if (isValidCredentials(nick, email, password, confirmedPassword)) {
                     createUser(nick, email, password)
                 }
                 ViewCompat.getWindowInsetsController(requireView())
@@ -50,7 +57,7 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
         }
     }
 
-    private fun checkCredentials(
+    private fun isValidCredentials(
         nick: String,
         email: String,
         password: String,
@@ -99,12 +106,20 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
 
         val profileUpdates = userProfileChangeRequest {
             displayName = nick
-            photoUri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/jf-forum-f415b.appspot.com/o/utils%2Findex.png?alt=media&token=fe7ea5f2-b733-432c-9899-76c87d963ec8")
+            photoUri =
+                Uri.parse("https://firebasestorage.googleapis.com/v0/b/jf-forum-f415b.appspot.com/o/utils%2Findex.png?alt=media&token=fe7ea5f2-b733-432c-9899-76c87d963ec8")
         }
 
         user!!.updateProfile(profileUpdates)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    val userEntity = User(
+                        user.displayName,
+                        user.photoUrl.toString(),
+                    )
+                    database.child("users")
+                        .child(user.uid)
+                        .setValue(userEntity)
                     view?.findNavController()?.navigate(
                         R.id.action_registrationFragment_to_navigation_main
                     )

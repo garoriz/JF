@@ -1,4 +1,4 @@
-package com.example.jf.features.other
+package com.example.jf.features.other.presentation
 
 import android.os.Bundle
 import android.view.View
@@ -33,6 +33,7 @@ class OtherFragment : Fragment(R.layout.fragment_other) {
                 btnLogin.visibility = View.VISIBLE
                 btnExit.visibility = View.GONE
                 btnEditProfile.visibility = View.GONE
+                btnSettings.visibility = View.GONE
             }
             btnLogin.setOnClickListener {
                 view.findNavController().navigate(R.id.action_navigation_other_to_loginFragment)
@@ -42,6 +43,9 @@ class OtherFragment : Fragment(R.layout.fragment_other) {
             }
             btnNewPost.setOnClickListener {
                 view.findNavController().navigate(R.id.action_navigation_other_to_newPostFragment)
+            }
+            btnSettings.setOnClickListener {
+                view.findNavController().navigate(R.id.action_navigation_other_to_settingsFragment)
             }
             btnExit.setOnClickListener {
                 auth.signOut()

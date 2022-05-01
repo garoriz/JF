@@ -61,7 +61,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
-                    view?.findNavController()?.navigateUp()
+                    view?.findNavController()?.apply {
+                        navigate(R.id.action_loginFragment_to_navigation_main)
+                        //backQueue.clear()
+                    }
                 } else {
                     showMessage(R.string.error)
                 }

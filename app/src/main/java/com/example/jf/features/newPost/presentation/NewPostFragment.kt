@@ -17,8 +17,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.instacart.library.truetime.TrueTime
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -52,6 +50,7 @@ class NewPostFragment : Fragment(R.layout.fragment_new_post) {
 
         database = Firebase.database("https://jf-forum-f415b-default-rtdb.europe-west1.firebasedatabase.app/")
             .reference
+        val currentUser = auth.currentUser
 
         val popupMenu = PopupMenu(requireContext(), binding.tvAddMedia)
         popupMenu.inflate(R.menu.popup_menu)
@@ -71,7 +70,7 @@ class NewPostFragment : Fragment(R.layout.fragment_new_post) {
         with (binding) {
             tvSend.setOnClickListener {
                 val post = Post(
-                    auth.currentUser?.displayName,
+                    currentUser?.uid,
                     etText.text.toString(),
                     urlsPhoto,
                     urlsVideo
@@ -85,11 +84,20 @@ class NewPostFragment : Fragment(R.layout.fragment_new_post) {
                     return@setOnClickListener
                 }
 
-                database.child("posts")
-                    .push()
-                    .setValue(post)
-                view.findNavController().navigateUp()
+                val key = database.child("posts")
+                    .push().key
+                if (key != null && currentUser != null) {
+                    database.child("posts")
+                        .child(key)
+                        .setValue(post)
+                    database.child("users")
+                        .child(currentUser.uid)
+                        .child("posts")
+                        .child(key)
+                        .setValue(post)
+                }
                 showMessage(R.string.post_sent)
+                view.findNavController().navigateUp()
             }
             tvAddMedia.setOnClickListener {
                 popupMenu.show()

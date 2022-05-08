@@ -17,7 +17,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import java.util.*
 
 
 class NewPostFragment : Fragment(R.layout.fragment_new_post) {
@@ -53,7 +52,7 @@ class NewPostFragment : Fragment(R.layout.fragment_new_post) {
         val currentUser = auth.currentUser
 
         val popupMenu = PopupMenu(requireContext(), binding.tvAddMedia)
-        popupMenu.inflate(R.menu.popup_menu)
+        popupMenu.inflate(R.menu.popup_menu_in_new_post_fragment)
 
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {

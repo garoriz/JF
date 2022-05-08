@@ -19,7 +19,7 @@
         android:id="@+id/tv_posts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/posts"
+        android:text="@string/post_feed"
         android:fontFamily="sans-serif-black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

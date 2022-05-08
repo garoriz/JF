@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">JF</string>
-    <string name="posts">Лента</string>
+    <string name="posts">Посты</string>
+    <string name="post_feed">Лента</string>
     <string name="cities">Ближайшие города</string>
     <string name="other">Дополнительно</string>
     <string name="error_getting_location">Не удалось получить местоположение</string>
@@ -9,8 +10,6 @@
     <string name="permission">Разрешение</string>
     <string name="ok">OK</string>
     <string name="no">Нет</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_location">Не удалось получить местоположение</string>
     <string name="nick">Никнейм</string>
     <string name="password">Пароль</string>
@@ -58,9 +57,16 @@
     <string name="new_password">Новый пароль</string>
     <string name="change_password_2">Изменить пароль</string>
     <string name="change_password_successfully">Пароль успешно изменён</string>
-    <string name="messages">Сообщения</string>
     <string name="chat_with_user">Чат с пользователем</string>
     <string name="see_all">Смотреть всё</string>
     <string name="image">[Изображение]</string>
     <string name="video_">[Видео]</string>
+    <string name="delete_post">Удалить запись</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="type_your_message">Введите ваше сообщение…</string>
+    <string name="login_and_start_chat">Войдите, чтобы начать общаться!</string>
+    <string name="message_should_not_empty">Сообщение не должно быть пустым</string>
+    <string name="messages">Сообщения</string>
+    <string name="delete_message">Удалить сообщение</string>
+    <string name="new_">new</string>
 </resources>

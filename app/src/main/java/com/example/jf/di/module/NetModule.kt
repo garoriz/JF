@@ -195,7 +195,7 @@ class NetModule {
         @ExplainInterceptor provideExplainInterceptor: Interceptor,
         @FormatversionInterceptor provideFormatversionInterceptor: Interceptor,
         @FormatInterceptor provideFormatInterceptor: Interceptor,
-        @PipropInterceptor providerPipropInterceptor: Interceptor,
+        @PipropInterceptor providePipropInterceptor: Interceptor,
     ): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(provideActionInterceptor)
         .addInterceptor(providePropInterceptor)

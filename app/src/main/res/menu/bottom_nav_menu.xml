@@ -15,5 +15,4 @@
         android:id="@+id/navigation_other"
         android:icon="@drawable/ic_round_menu_24"
         android:title="@string/other" />
-
 </menu>

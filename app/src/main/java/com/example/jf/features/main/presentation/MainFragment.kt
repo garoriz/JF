@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.jf.R
+import com.example.jf.databinding.ActivityMainBinding
 import com.example.jf.databinding.FragmentMainBinding
 import com.example.jf.features.main.domain.model.PostInList
 import com.example.jf.features.main.presentation.adapter.PostListAdapter
@@ -45,8 +46,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         val currentUser = auth.currentUser
 
-        database = Firebase.database("https://jf-forum-f415b-default-rtdb.europe-west1.firebasedatabase.app/")
-            .reference
+        database =
+            Firebase.database("https://jf-forum-f415b-default-rtdb.europe-west1.firebasedatabase.app/")
+                .reference
 
         updatePosts()
 
@@ -56,10 +58,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     transformations(CircleCropTransformation())
                 }
                 ivAvatar.setOnClickListener {
-                    view.findNavController().navigate(R.id.action_navigation_main_to_myProfileFragment)
+                    view.findNavController()
+                        .navigate(R.id.action_navigation_main_to_myProfileFragment)
                 }
-            }
-            else
+            } else
                 ivAvatar.setOnClickListener {
                     view.findNavController().navigate(R.id.action_navigation_main_to_loginFragment)
                 }
@@ -82,13 +84,15 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                                 val postList = mutableListOf<PostInList?>()
                                 for (postSnapshot in dataSnapshot.children) {
                                     val post = postSnapshot.getValue(Post::class.java)
-                                    postList.add(PostInList(
-                                        postSnapshot.key,
-                                        post?.userId,
-                                        post?.text,
-                                        post?.urisPhoto?.get(0),
-                                        post?.urisVideo?.get(0),
-                                    ))
+                                    postList.add(
+                                        PostInList(
+                                            postSnapshot.key,
+                                            post?.userId,
+                                            post?.text,
+                                            post?.urisPhoto?.get(0),
+                                            post?.urisVideo?.get(0),
+                                        )
+                                    )
                                 }
                                 postList.reverse()
 
@@ -109,7 +113,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     private fun updatePosts() {
-    val posts = database.child("posts").limitToLast(postLimit)
+        val posts = database.child("posts").limitToLast(postLimit)
 
         posts.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -117,13 +121,15 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 val postList = mutableListOf<PostInList?>()
                 for (postSnapshot in dataSnapshot.children) {
                     val post = postSnapshot.getValue(Post::class.java)
-                    postList.add(PostInList(
-                        postSnapshot.key,
-                        post?.userId,
-                        post?.text,
-                        post?.urisPhoto?.get(0),
-                        post?.urisVideo?.get(0),
-                    ))
+                    postList.add(
+                        PostInList(
+                            postSnapshot.key,
+                            post?.userId,
+                            post?.text,
+                            post?.urisPhoto?.get(0),
+                            post?.urisVideo?.get(0),
+                        )
+                    )
                 }
                 postList.reverse()
                 postListAdapter = PostListAdapter {

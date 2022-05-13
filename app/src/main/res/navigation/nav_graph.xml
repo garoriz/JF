@@ -104,7 +104,7 @@
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.example.jf.features.editProfile.EditProfileFragment"
+        android:name="com.example.jf.features.editProfile.presentation.EditProfileFragment"
         android:label="EditProfileFragment" />
     <fragment
         android:id="@+id/settingsFragment"

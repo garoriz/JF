@@ -69,4 +69,6 @@
     <string name="messages">Сообщения</string>
     <string name="delete_message">Удалить сообщение</string>
     <string name="new_">new</string>
+    <string name="not_have_user_or_invalid_password">Ошибка. Возможно, пользователя с таким email не
+        существует или неправильный пароль</string>
 </resources>

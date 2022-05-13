@@ -1,13 +1,17 @@
 package com.example.jf.features.login.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.example.jf.R
 import com.example.jf.databinding.FragmentLoginBinding
+import com.example.jf.features.editProfile.presentation.EditProfileViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -15,18 +19,20 @@ import com.google.firebase.ktx.Firebase
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var binding: FragmentLoginBinding
-    private lateinit var auth: FirebaseAuth
+    private lateinit var viewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        auth = Firebase.auth
+        viewModel = LoginViewModel()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentLoginBinding.bind(view)
+
+        initObservers()
 
         with(binding) {
             tvRegistration.setOnClickListener {
@@ -45,6 +51,26 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
     }
 
+    private fun initObservers() {
+        viewModel.isCompleted.observe(viewLifecycleOwner) { it ->
+            it.fold(onSuccess = {
+                if (it) {
+                    view?.findNavController()?.apply {
+                        navigate(R.id.action_loginFragment_to_navigation_main)
+                        //backQueue.clear()
+                    }
+                }
+            }, onFailure = {
+                showMessage(R.string.not_have_user_or_invalid_password)
+                Log.e("e", it.message.toString())
+            })
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) {
+            Log.e("e", it.message.toString())
+        }
+    }
+
     private fun checkCredentials(email: String, password: String): Boolean {
         if (email.isEmpty()) {
             showMessage(R.string.empty_email)
@@ -58,17 +84,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun login(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    view?.findNavController()?.apply {
-                        navigate(R.id.action_loginFragment_to_navigation_main)
-                        //backQueue.clear()
-                    }
-                } else {
-                    showMessage(R.string.error)
-                }
-            }
+        viewModel.signInAndGetIsCompleted(email, password)
     }
 
     private fun showMessage(stringId: Int) {

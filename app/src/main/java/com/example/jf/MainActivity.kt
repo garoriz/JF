@@ -36,27 +36,25 @@ class MainActivity : AppCompatActivity() {
             setContentView(it.root)
         }
 
-        if (currentUser != null) {
-            val isUnreadChatsRef = database
-                .child("users")
-                .child(currentUser.uid)
-                .child("isUnreadChat")
-
-            val unreadChatsListener = object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val isUnreadChats = dataSnapshot.getValue(Boolean::class.java)
-                    if (isUnreadChats == true)
-                        binding.badge.visibility = View.VISIBLE
-                    else
-                        binding.badge.visibility = View.INVISIBLE
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    showMessage(R.string.no_internet)
-                }
+        val unreadChatsListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val isUnreadChats = dataSnapshot.getValue(Boolean::class.java)
+                if (isUnreadChats == true)
+                    binding.badge.visibility = View.VISIBLE
+                else
+                    binding.badge.visibility = View.INVISIBLE
             }
-            isUnreadChatsRef.addValueEventListener(unreadChatsListener)
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                showMessage(R.string.no_internet)
+            }
         }
+        currentUser?.let {
+            database
+                .child("users")
+                .child(it.uid)
+                .child("isUnreadChat")
+        }?.addValueEventListener(unreadChatsListener)
 
         val controller = (supportFragmentManager.findFragmentById(R.id.container)
                 as NavHostFragment).navController

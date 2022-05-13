@@ -1,42 +1,32 @@
 package com.example.jf.features.main.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.distinctUntilChanged
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.jf.R
-import com.example.jf.databinding.ActivityMainBinding
 import com.example.jf.databinding.FragmentMainBinding
-import com.example.jf.features.main.domain.model.PostInList
 import com.example.jf.features.main.presentation.adapter.PostListAdapter
-import com.example.jf.features.newPost.domain.model.Post
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 
 private const val ARG_NAME = "id"
 
 class MainFragment : Fragment(R.layout.fragment_main) {
     private lateinit var binding: FragmentMainBinding
-    private lateinit var auth: FirebaseAuth
-    private lateinit var database: DatabaseReference
-    private val storageRef = Firebase.storage.reference
     private var postListAdapter: PostListAdapter? = null
     var postLimit = 30
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        auth = Firebase.auth
+        viewModel = MainViewModel()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,29 +34,15 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         binding = FragmentMainBinding.bind(view)
 
-        val currentUser = auth.currentUser
+        initObservers()
 
-        database =
-            Firebase.database("https://jf-forum-f415b-default-rtdb.europe-west1.firebasedatabase.app/")
-                .reference
-
-        updatePosts()
+        viewModel.onGetUser()
+        viewModel.onGetPosts(postLimit)
 
         with(binding) {
-            if (currentUser != null) {
-                ivAvatar.load(currentUser.photoUrl) {
-                    transformations(CircleCropTransformation())
-                }
-                ivAvatar.setOnClickListener {
-                    view.findNavController()
-                        .navigate(R.id.action_navigation_main_to_myProfileFragment)
-                }
-            } else
-                ivAvatar.setOnClickListener {
-                    view.findNavController().navigate(R.id.action_navigation_main_to_loginFragment)
-                }
             swipeContainer.setOnRefreshListener {
-                updatePosts()
+                postLimit = 30
+                observePosts()
                 swipeContainer.isRefreshing = false
             }
 
@@ -77,64 +53,51 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
                     if (!recyclerView.canScrollVertically(1) && dy != 0) {
                         binding.tvLoadingPosts.visibility = View.VISIBLE
-                        val posts = database.child("posts").limitToLast(postLimit)
-
-                        posts.addValueEventListener(object : ValueEventListener {
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                val postList = mutableListOf<PostInList?>()
-                                for (postSnapshot in dataSnapshot.children) {
-                                    val post = postSnapshot.getValue(Post::class.java)
-                                    postList.add(
-                                        PostInList(
-                                            postSnapshot.key,
-                                            post?.userId,
-                                            post?.text,
-                                            post?.urisPhoto?.get(0),
-                                            post?.urisVideo?.get(0),
-                                        )
-                                    )
-                                }
-                                postList.reverse()
-
-                                binding.tvLoadingPosts.visibility = View.GONE
-                                postListAdapter?.submitList(postList)
-                                posts.removeEventListener(this)
-                                postLimit += 30
-                            }
-
-                            override fun onCancelled(databaseError: DatabaseError) {
-                                showMessage(R.string.no_internet)
-                            }
-                        })
+                        viewModel.onGetPosts(postLimit)
+                        observeMorePosts()
                     }
                 }
             })
         }
     }
 
-    private fun updatePosts() {
-        val posts = database.child("posts").limitToLast(postLimit)
-
-        posts.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                binding.tvLoading.visibility = View.GONE
-                val postList = mutableListOf<PostInList?>()
-                for (postSnapshot in dataSnapshot.children) {
-                    val post = postSnapshot.getValue(Post::class.java)
-                    postList.add(
-                        PostInList(
-                            postSnapshot.key,
-                            post?.userId,
-                            post?.text,
-                            post?.urisPhoto?.get(0),
-                            post?.urisVideo?.get(0),
-                        )
-                    )
+    private fun initObservers() {
+        viewModel.currentUser.observe(viewLifecycleOwner) { it ->
+            it.fold(onSuccess = {
+                with(binding) {
+                    if (it != null) {
+                        ivAvatar.load(it.photoUrl) {
+                            transformations(CircleCropTransformation())
+                        }
+                        ivAvatar.setOnClickListener {
+                            view?.findNavController()
+                                ?.navigate(R.id.action_navigation_main_to_myProfileFragment)
+                        }
+                    } else
+                        ivAvatar.setOnClickListener {
+                            view?.findNavController()
+                                ?.navigate(R.id.action_navigation_main_to_loginFragment)
+                        }
                 }
-                postList.reverse()
+            }, onFailure = {
+                Log.e("e", it.message.toString())
+            })
+        }
+
+        observePosts()
+
+        viewModel.error.observe(viewLifecycleOwner) {
+            Log.e("e", it.message.toString())
+        }
+    }
+
+    private fun observePosts() {
+        viewModel.posts.observe(viewLifecycleOwner) { it ->
+            it.fold(onSuccess = { posts ->
+                binding.tvLoading.visibility = View.GONE
                 postListAdapter = PostListAdapter {
                     getAllPost(it)
-                    postListAdapter?.submitList(postList)
+                    postListAdapter?.submitList(posts)
                 }
 
                 val decorator = DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
@@ -144,15 +107,26 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     addItemDecoration(decorator)
                 }
 
-                postListAdapter?.submitList(postList)
-                posts.removeEventListener(this)
+                postListAdapter?.submitList(posts)
                 postLimit += 30
-            }
+                viewModel.posts.removeObservers(viewLifecycleOwner)
+            }, onFailure = {
+                Log.e("e", it.message.toString())
+            })
+        }
+    }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                showMessage(R.string.no_internet)
-            }
-        })
+    private fun observeMorePosts() {
+        viewModel.posts.distinctUntilChanged().observe(viewLifecycleOwner) { it ->
+            it.fold(onSuccess = {
+                postListAdapter?.submitList(it)
+                binding.tvLoadingPosts.visibility = View.GONE
+                postLimit += 30
+                viewModel.posts.removeObservers(viewLifecycleOwner)
+            }, onFailure = {
+                Log.e("e", it.message.toString())
+            })
+        }
     }
 
     private fun getAllPost(it: String) {

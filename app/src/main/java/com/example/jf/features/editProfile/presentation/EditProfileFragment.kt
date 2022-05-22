@@ -3,32 +3,29 @@ package com.example.jf.features.editProfile.presentation
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.example.jf.MainActivity
 import com.example.jf.R
 import com.example.jf.databinding.FragmentEditProfileBinding
 import com.example.jf.features.editProfile.domain.models.User
+import com.example.jf.utils.AppViewModelFactory
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import javax.inject.Inject
 
 class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
+    @Inject
+    lateinit var factory: AppViewModelFactory
     private lateinit var binding: FragmentEditProfileBinding
-    private lateinit var auth: FirebaseAuth
-    private val storageRef = Firebase.storage.reference
-    private var currentUser1: FirebaseUser? = null
-    private lateinit var database: DatabaseReference
-    private lateinit var editProfileViewModel: EditProfileViewModel
+    private val editProfileViewModel: EditProfileViewModel by viewModels {
+        factory
+    }
     private var currentUser: User? = null
     private lateinit var selectedAvatarUri: Uri
 
@@ -43,9 +40,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (activity as MainActivity).appComponent.inject(this)
         super.onCreate(savedInstanceState)
-
-        editProfileViewModel = EditProfileViewModel()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

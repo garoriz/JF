@@ -1,89 +1,79 @@
 package com.example.jf.features.other.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.MediaController
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.example.jf.MainActivity
 import com.example.jf.R
 import com.example.jf.databinding.FragmentOtherBinding
-import com.example.jf.features.registration.domain.User
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.example.jf.utils.AppViewModelFactory
+import javax.inject.Inject
 
 class OtherFragment : Fragment(R.layout.fragment_other) {
+    @Inject
+    lateinit var factory: AppViewModelFactory
     private lateinit var binding: FragmentOtherBinding
-    private lateinit var auth: FirebaseAuth
-    private lateinit var database: DatabaseReference
+    private val viewModel: OtherViewModel by viewModels {
+        factory
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (activity as MainActivity).appComponent.inject(this)
         super.onCreate(savedInstanceState)
-
-        auth = Firebase.auth
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentOtherBinding.bind(view)
-        val currentUser = auth.currentUser
-        database =
-            Firebase.database("https://jf-forum-f415b-default-rtdb.europe-west1.firebasedatabase.app/")
-                .reference
+        initObservers()
+        viewModel.onGetUser()
+    }
 
-        with(binding) {
-            if (currentUser == null) {
-                btnNewPost.visibility = View.GONE
-                btnLogin.visibility = View.VISIBLE
-                btnExit.visibility = View.GONE
-                btnEditProfile.visibility = View.GONE
-                btnSettings.visibility = View.GONE
-                btnMessages.visibility = View.GONE
-            } else {
-                database
-                    .child("users")
-                    .child(currentUser.uid)
-                    .child("isUnreadChat")
-                    .get()
-                    .addOnSuccessListener {
-                        val isUnreadChat = it.getValue(Boolean::class.java)
-                        if (isUnreadChat == true)
-                            badge.visibility = View.VISIBLE
-                    }
-            }
-            btnMessages.setOnClickListener {
-                if (currentUser != null) {
-                    database
-                        .child("users")
-                        .child(currentUser.uid)
-                        .child("isUnreadChat")
-                        .removeValue()
+    private fun initObservers() {
+        viewModel.currentUser.observe(viewLifecycleOwner) { it ->
+            it.fold(onSuccess = { user ->
+                if (user == null) {
+                    binding.btnNewPost.visibility = View.GONE
+                    binding.btnLogin.visibility = View.VISIBLE
+                    binding.btnExit.visibility = View.GONE
+                    binding.btnEditProfile.visibility = View.GONE
+                    binding.btnSettings.visibility = View.GONE
+                    binding.btnNotes.visibility = View.GONE
                 }
-                view.findNavController()
-                    .navigate(R.id.action_navigation_other_to_messagesFragment)
-            }
-            btnLogin.setOnClickListener {
-                view.findNavController().navigate(R.id.action_navigation_other_to_loginFragment)
-            }
-            btnEditProfile.setOnClickListener {
-                view.findNavController()
-                    .navigate(R.id.action_navigation_other_to_editProfileFragment)
-            }
-            btnNewPost.setOnClickListener {
-                view.findNavController()
-                    .navigate(R.id.action_navigation_other_to_newPostFragment)
-            }
-            btnSettings.setOnClickListener {
-                view.findNavController()
-                    .navigate(R.id.action_navigation_other_to_settingsFragment)
-            }
-            btnExit.setOnClickListener {
-                auth.signOut()
-                view.findNavController().navigate(R.id.navigation_main)
-            }
+                binding.btnLogin.setOnClickListener {
+                    view?.findNavController()?.navigate(R.id.action_navigation_other_to_loginFragment)
+                }
+                binding.btnEditProfile.setOnClickListener {
+                    view?.findNavController()
+                        ?.navigate(R.id.action_navigation_other_to_editProfileFragment)
+                }
+                binding.btnNewPost.setOnClickListener {
+                    view?.findNavController()
+                        ?.navigate(R.id.action_navigation_other_to_newPostFragment)
+                }
+                binding.btnNotes.setOnClickListener {
+                    view?.findNavController()
+                        ?.navigate(R.id.action_navigation_other_to_notesFragment)
+                }
+                binding.btnSettings.setOnClickListener {
+                    view?.findNavController()
+                        ?.navigate(R.id.action_navigation_other_to_settingsFragment)
+                }
+                binding.btnExit.setOnClickListener {
+                    viewModel.onSignOut()
+                    view?.findNavController()?.navigate(R.id.navigation_main)
+                }
+            }, onFailure = {
+                Log.e("e", it.message.toString())
+            })
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) {
+            Log.e("e", it.message.toString())
         }
     }
 }

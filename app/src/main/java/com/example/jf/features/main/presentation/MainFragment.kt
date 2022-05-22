@@ -5,28 +5,35 @@ import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.distinctUntilChanged
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.example.jf.MainActivity
 import com.example.jf.R
 import com.example.jf.databinding.FragmentMainBinding
 import com.example.jf.features.main.presentation.adapter.PostListAdapter
+import com.example.jf.utils.AppViewModelFactory
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 private const val ARG_NAME = "id"
 
 class MainFragment : Fragment(R.layout.fragment_main) {
+    @Inject
+    lateinit var factory: AppViewModelFactory
     private lateinit var binding: FragmentMainBinding
     private var postListAdapter: PostListAdapter? = null
     var postLimit = 30
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels {
+        factory
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (activity as MainActivity).appComponent.inject(this)
         super.onCreate(savedInstanceState)
-        viewModel = MainViewModel()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,9 +73,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             it.fold(onSuccess = {
                 with(binding) {
                     if (it != null) {
-                        ivAvatar.load(it.photoUrl) {
-                            transformations(CircleCropTransformation())
-                        }
+                        if (it.photoUrl != null)
+                            ivAvatar.load(it.photoUrl) {
+                                transformations(CircleCropTransformation())
+                            }
                         ivAvatar.setOnClickListener {
                             view?.findNavController()
                                 ?.navigate(R.id.action_navigation_main_to_myProfileFragment)
@@ -93,7 +101,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private fun observePosts() {
         viewModel.posts.observe(viewLifecycleOwner) { it ->
-            it.fold(onSuccess = { posts ->
+            it?.fold(onSuccess = { posts ->
                 binding.tvLoading.visibility = View.GONE
                 postListAdapter = PostListAdapter {
                     getAllPost(it)
@@ -108,6 +116,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 }
 
                 postListAdapter?.submitList(posts)
+                viewModel.clearPostsLiveData()
                 postLimit += 30
                 viewModel.posts.removeObservers(viewLifecycleOwner)
             }, onFailure = {
@@ -117,9 +126,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     private fun observeMorePosts() {
-        viewModel.posts.distinctUntilChanged().observe(viewLifecycleOwner) { it ->
-            it.fold(onSuccess = {
+        viewModel.posts.observe(viewLifecycleOwner) { it ->
+            it?.fold(onSuccess = {
                 postListAdapter?.submitList(it)
+                viewModel.clearPostsLiveData()
                 binding.tvLoadingPosts.visibility = View.GONE
                 postLimit += 30
                 viewModel.posts.removeObservers(viewLifecycleOwner)
@@ -137,11 +147,4 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             )
     }
 
-    private fun showMessage(stringId: Int) {
-        Snackbar.make(
-            binding.root,
-            stringId,
-            Snackbar.LENGTH_LONG
-        ).show()
-    }
 }

@@ -6,10 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jf.features.login.domain.useCases.SignInAndGetIsCompletedUseCase
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
-    val signInAndGetIsCompletedUseCase = SignInAndGetIsCompletedUseCase()
-
+class LoginViewModel @Inject constructor(
+    private val signInAndGetIsCompletedUseCase: SignInAndGetIsCompletedUseCase
+) : ViewModel() {
     private var _isCompleted: MutableLiveData<Result<Boolean>> = MutableLiveData()
     val isCompleted: LiveData<Result<Boolean>> = _isCompleted
 

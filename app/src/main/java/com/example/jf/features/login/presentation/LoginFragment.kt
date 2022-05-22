@@ -6,25 +6,26 @@ import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
-import coil.load
-import coil.transform.CircleCropTransformation
+import com.example.jf.MainActivity
 import com.example.jf.R
 import com.example.jf.databinding.FragmentLoginBinding
-import com.example.jf.features.editProfile.presentation.EditProfileViewModel
+import com.example.jf.utils.AppViewModelFactory
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import javax.inject.Inject
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
+    @Inject
+    lateinit var factory: AppViewModelFactory
     private lateinit var binding: FragmentLoginBinding
-    private lateinit var viewModel: LoginViewModel
+    private val viewModel: LoginViewModel by viewModels {
+        factory
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (activity as MainActivity).appComponent.inject(this)
         super.onCreate(savedInstanceState)
-
-        viewModel = LoginViewModel()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

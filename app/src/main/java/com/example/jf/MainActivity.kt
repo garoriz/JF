@@ -16,11 +16,9 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-
-private lateinit var binding: ActivityMainBinding
-
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
     lateinit var appComponent: AppComponent
     private lateinit var database: DatabaseReference
 
@@ -28,48 +26,14 @@ class MainActivity : AppCompatActivity() {
         appComponent = (application as App).appComponent
         appComponent.inject(this)
         super.onCreate(savedInstanceState)
-        val currentUser = Firebase.auth.currentUser
-        database =
-            Firebase.database("https://jf-forum-f415b-default-rtdb.europe-west1.firebasedatabase.app/")
-                .reference
         binding = ActivityMainBinding.inflate(layoutInflater).also {
             setContentView(it.root)
         }
-
-        val unreadChatsListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val isUnreadChats = dataSnapshot.getValue(Boolean::class.java)
-                if (isUnreadChats == true)
-                    binding.badge.visibility = View.VISIBLE
-                else
-                    binding.badge.visibility = View.INVISIBLE
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                showMessage(R.string.no_internet)
-            }
-        }
-        currentUser?.let {
-            database
-                .child("users")
-                .child(it.uid)
-                .child("isUnreadChat")
-        }?.addValueEventListener(unreadChatsListener)
 
         val controller = (supportFragmentManager.findFragmentById(R.id.container)
                 as NavHostFragment).navController
         val navView = binding.navView
 
-
-
         navView.setupWithNavController(controller)
-    }
-
-    private fun showMessage(stringId: Int) {
-        Snackbar.make(
-            binding.root,
-            stringId,
-            Snackbar.LENGTH_LONG
-        ).show()
     }
 }

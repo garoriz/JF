@@ -9,7 +9,7 @@
     <item
         android:id="@+id/navigation_cities"
         android:icon="@drawable/ic_round_book_24"
-        android:title="@string/cities" />
+        android:title="@string/localities" />
 
     <item
         android:id="@+id/navigation_other"

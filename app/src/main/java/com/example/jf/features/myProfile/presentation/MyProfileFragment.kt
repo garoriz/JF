@@ -5,37 +5,34 @@ import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.distinctUntilChanged
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.example.jf.MainActivity
 import com.example.jf.R
 import com.example.jf.databinding.FragmentMyProfileBinding
-import com.example.jf.features.myProfile.domain.model.PostInList
-import com.example.jf.features.myProfile.domain.model.User
 import com.example.jf.features.myProfile.presentation.adapter.PostListAdapter
-import com.example.jf.features.newPost.domain.model.Post
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.example.jf.utils.AppViewModelFactory
+import javax.inject.Inject
 
 private const val ARG_NAME = "id"
 
 class MyProfileFragment : Fragment(R.layout.fragment_my_profile) {
+    @Inject
+    lateinit var factory: AppViewModelFactory
     private lateinit var binding: FragmentMyProfileBinding
     private var postListAdapter: PostListAdapter? = null
     var postLimit = 30
-    private lateinit var viewModel: MyProfileViewModel
+    private val viewModel: MyProfileViewModel by viewModels {
+        factory
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (activity as MainActivity).appComponent.inject(this)
         super.onCreate(savedInstanceState)
-        viewModel = MyProfileViewModel()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,18 +60,6 @@ class MyProfileFragment : Fragment(R.layout.fragment_my_profile) {
                             view?.findNavController()
                                 ?.navigate(R.id.action_myProfileFragment_to_editProfileFragment)
                         }
-                        posts.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                                super.onScrolled(recyclerView, dx, dy)
-                                if (!recyclerView.canScrollVertically(1) && dy != 0) {
-                                    binding.tvLoadingPosts.visibility = View.VISIBLE
-                                    user.uid?.let {
-                                        viewModel.onGetPosts(postLimit, it)
-                                    }
-                                    observeMorePosts()
-                                }
-                            }
-                        })
                         swipeContainer.setOnRefreshListener {
                             postLimit = 30
                             user.uid?.let { viewModel.onGetPosts(postLimit, it) }
@@ -93,8 +78,8 @@ class MyProfileFragment : Fragment(R.layout.fragment_my_profile) {
     }
 
     private fun initObservers(uid: String) {
-        viewModel.posts.distinctUntilChanged().observe(viewLifecycleOwner) { it ->
-            it.fold(onSuccess = { posts ->
+        viewModel.posts.observe(viewLifecycleOwner) { it ->
+            it?.fold(onSuccess = { posts ->
                 binding.tvLoading.visibility = View.GONE
 
                 postListAdapter = PostListAdapter({
@@ -113,8 +98,20 @@ class MyProfileFragment : Fragment(R.layout.fragment_my_profile) {
                 }
 
                 postListAdapter?.submitList(posts)
+                viewModel.clearPostsLiveData()
                 postLimit += 30
                 viewModel.posts.removeObservers(viewLifecycleOwner)
+
+                binding.posts.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+                        if (!recyclerView.canScrollVertically(1) && dy != 0) {
+                            binding.tvLoadingPosts.visibility = View.VISIBLE
+                            viewModel.onGetPosts(postLimit, uid)
+                            observeMorePosts()
+                        }
+                    }
+                })
             }, onFailure = {
                 Log.e("e", it.message.toString())
             })
@@ -122,9 +119,10 @@ class MyProfileFragment : Fragment(R.layout.fragment_my_profile) {
     }
 
     private fun observeMorePosts() {
-        viewModel.posts.distinctUntilChanged().observe(viewLifecycleOwner) { it ->
-            it.fold(onSuccess = {
+        viewModel.posts.observe(viewLifecycleOwner) { it ->
+            it?.fold(onSuccess = {
                 postListAdapter?.submitList(it)
+                viewModel.clearPostsLiveData()
                 binding.tvLoadingPosts.visibility = View.GONE
                 postLimit += 30
                 viewModel.posts.removeObservers(viewLifecycleOwner)
@@ -149,5 +147,7 @@ class MyProfileFragment : Fragment(R.layout.fragment_my_profile) {
 
     private fun deletePost(it: String, uid: String) {
         viewModel.deletePost(it, uid)
+        postLimit -= 30
+        observeMorePosts()
     }
 }

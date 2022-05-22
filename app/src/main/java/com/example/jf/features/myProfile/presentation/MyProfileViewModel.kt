@@ -10,14 +10,16 @@ import com.example.jf.features.myProfile.domain.useCases.DeletePostUseCase
 import com.example.jf.features.myProfile.domain.useCases.GetCurrentUserUseCase
 import com.example.jf.features.myProfile.domain.useCases.GetPostsUseCase
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MyProfileViewModel : ViewModel() {
-    val getPostsUseCase = GetPostsUseCase()
-    val getCurrentUserUseCase = GetCurrentUserUseCase()
-    val deletePostUseCase = DeletePostUseCase()
+class MyProfileViewModel @Inject constructor(
+private val getPostsUseCase: GetPostsUseCase,
+private val getCurrentUserUseCase: GetCurrentUserUseCase,
+private val deletePostUseCase: DeletePostUseCase,
+) : ViewModel() {
 
-    private var _posts: MutableLiveData<Result<MutableList<PostInList?>?>> = MutableLiveData()
-    val posts: LiveData<Result<MutableList<PostInList?>?>> = _posts
+    private var _posts: MutableLiveData<Result<MutableList<PostInList?>?>?> = MutableLiveData()
+    val posts: MutableLiveData<Result<MutableList<PostInList?>?>?> = _posts
 
     private var _currentUser: MutableLiveData<Result<User?>> = MutableLiveData()
     val currentUser: LiveData<Result<User?>> = _currentUser
@@ -57,5 +59,9 @@ class MyProfileViewModel : ViewModel() {
                 _error.value = ex
             }
         }
+    }
+
+    fun clearPostsLiveData() {
+        _posts.value = null
     }
 }

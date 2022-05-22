@@ -8,16 +8,17 @@ import androidx.lifecycle.viewModelScope
 import com.example.jf.features.editProfile.domain.models.User
 import com.example.jf.features.editProfile.domain.usecases.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EditProfileViewModel : ViewModel() {
-    val getUser = GetUserUseCase()
-    val updateNickUseCase = UpdateNickUseCase()
-    val updateNickInDbUseCase = UpdateNickInDbUseCase()
-    val uploadAvatarAndGetIsCompletedUseCase = UploadAvatarAndGetIsCompletedUseCase()
-    val getDownloadAvatarUriUseCase = GetDownloadAvatarUriUseCase()
-    val updateAvatarAndGetIsCompletedUseCase = UpdateAvatarUriAndGetIsCompletedUseCase()
-    val updateAvatarUriInDbUseCase = UpdateAvatarUriInDbUseCase()
-
+class EditProfileViewModel  @Inject constructor(
+    private val getUser: GetUserUseCase,
+    private val updateNickUseCase: UpdateNickUseCase,
+    private val updateNickInDbUseCase: UpdateNickInDbUseCase,
+    private val uploadAvatarAndGetIsCompletedUseCase: UploadAvatarAndGetIsCompletedUseCase,
+    private val getDownloadAvatarUriUseCase: GetDownloadAvatarUriUseCase,
+    private val updateAvatarAndGetIsCompletedUseCase: UpdateAvatarUriAndGetIsCompletedUseCase,
+    private val updateAvatarUriInDbUseCase: UpdateAvatarUriInDbUseCase,
+) : ViewModel() {
     private var _currentUser: MutableLiveData<Result<User?>> = MutableLiveData()
     val currentUser: LiveData<Result<User?>> = _currentUser
 

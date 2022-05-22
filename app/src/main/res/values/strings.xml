@@ -2,7 +2,7 @@
     <string name="app_name">JF</string>
     <string name="posts">Посты</string>
     <string name="post_feed">Лента</string>
-    <string name="cities">Ближайшие города</string>
+    <string name="localities">Ближайшие населённые пункты</string>
     <string name="other">Дополнительно</string>
     <string name="error_getting_location">Не удалось получить местоположение</string>
     <string name="error_check_permission">Будут показаны ближайшие города к Москве.
@@ -71,4 +71,12 @@
     <string name="new_">new</string>
     <string name="not_have_user_or_invalid_password">Ошибка. Возможно, пользователя с таким email не
         существует или неправильный пароль</string>
+    <string name="notes">Заметки</string>
+    <string name="success_save">Успешно сохранено</string>
+    <string name="new_messages">У вас есть новые сообщения</string>
+    <string name="error_registration">Ошибка. Возможно, пользователь с таким email существует
+    </string>
+    <string name="heading">Заголовок</string>
+    <string name="jf_">JF</string>
+    <string name="is_have_account">Есть аккаунт?</string>
 </resources>

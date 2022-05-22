@@ -24,7 +24,10 @@
         android:id="@+id/author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
         <ImageView
             android:id="@+id/iv_avatar"
             android:layout_width="32dp"
@@ -37,12 +40,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:fontFamily="sans-serif-black"
+            android:fontFamily="sans-serif-light"
             android:textColor="@color/black"
             android:layout_marginHorizontal="16dp"
             android:layout_marginVertical="8dp"
             tools:text="Author"/>
     </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="28sp"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif-black"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="8dp"
+            tools:text="Heading"/>
 
         <TextView
             android:id="@+id/tv_content"

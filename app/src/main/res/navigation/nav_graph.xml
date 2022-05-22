@@ -46,13 +46,13 @@
             android:id="@+id/action_navigation_other_to_settingsFragment"
             app:destination="@id/settingsFragment" />
         <action
-            android:id="@+id/action_navigation_other_to_messagesFragment"
-            app:destination="@id/messagesFragment" />
-        <action
             android:id="@+id/action_navigation_other_to_navigation_main"
             app:destination="@id/navigation_main"
             app:popUpTo="@id/navigation_main"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_navigation_other_to_notesFragment"
+            app:destination="@id/notesFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -93,7 +93,7 @@
         tools:layout="@layout/fragment_new_post" />
     <fragment
         android:id="@+id/postFragment"
-        android:name="com.example.jf.features.post.PostFragment"
+        android:name="com.example.jf.features.post.presentation.PostFragment"
         android:label="PostFragment" >
         <action
             android:id="@+id/action_postFragment_to_myProfileFragment"
@@ -108,7 +108,7 @@
         android:label="EditProfileFragment" />
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.jf.features.settings.SettingsFragment"
+        android:name="com.example.jf.features.settings.presentation.SettingsFragment"
         android:label="SettingsFragment" />
     <fragment
         android:id="@+id/myProfileFragment"
@@ -123,7 +123,7 @@
     </fragment>
     <fragment
         android:id="@+id/otherProfileFragment"
-        android:name="com.example.jf.features.otherProfile.OtherProfileFragment"
+        android:name="com.example.jf.features.otherProfile.presentation.OtherProfileFragment"
         android:label="OtherProfileFragment" >
         <action
             android:id="@+id/action_otherProfileFragment_to_postFragment"
@@ -131,21 +131,10 @@
         <action
             android:id="@+id/action_otherProfileFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
-        <action
-            android:id="@+id/action_otherProfileFragment_to_chatFragment"
-            app:destination="@id/chatFragment" />
     </fragment>
     <fragment
-        android:id="@+id/messagesFragment"
-        android:name="com.example.jf.features.messages.presentation.MessagesFragment"
-        android:label="MessagesFragment" >
-        <action
-            android:id="@+id/action_messagesFragment_to_chatFragment"
-            app:destination="@id/chatFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/chatFragment"
-        android:name="com.example.jf.features.chat.presentation.ChatFragment"
-        android:label="ChatFragment" />
+        android:id="@+id/notesFragment"
+        android:name="com.example.jf.features.notes.presentation.NotesFragment"
+        android:label="NotesFragment" />
 
 </navigation>

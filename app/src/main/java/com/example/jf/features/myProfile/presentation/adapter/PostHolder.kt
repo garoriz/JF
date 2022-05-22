@@ -8,7 +8,7 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.jf.databinding.ItemPostInMyFragmentBinding
 import com.example.jf.features.myProfile.domain.model.PostInList
-import com.example.jf.features.registration.domain.User
+import com.example.jf.features.registration.domain.model.User
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -18,9 +18,6 @@ class PostHolder(
     private val getAllPost: (String) -> Unit,
     private val delete: (String) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
-    private val database: DatabaseReference =
-        Firebase.database("https://jf-forum-f415b-default-rtdb.europe-west1.firebasedatabase.app/")
-            .reference
     private var postInList: PostInList? = null
 
     init {
@@ -35,14 +32,11 @@ class PostHolder(
     fun bind(item: PostInList) {
         this.postInList = item
         with(binding) {
-            item.userId?.let { it ->
-                database.child("users").child(it).get().addOnSuccessListener {
-                    val user = it.getValue(User::class.java)
-                    ivAvatar.load(user?.urlPhoto) {
-                        transformations(CircleCropTransformation())
-                    }
-                    tvAuthor.text = user?.nick
-                }
+            if (item.heading != null && item.heading.length > 20) {
+                val heading = item.heading.subSequence(0, 19).toString() + "..."
+                tvHeading.text = heading
+            } else {
+                tvHeading.text = item.heading
             }
             if (item.text != null && item.text.length > 250) {
                 val text = item.text.subSequence(0, 249).toString() + "..."

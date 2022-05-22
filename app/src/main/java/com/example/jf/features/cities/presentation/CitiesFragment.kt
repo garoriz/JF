@@ -31,7 +31,6 @@ class CitiesFragment : Fragment(R.layout.fragment_cities) {
     @Inject
     lateinit var factory: AppViewModelFactory
     private lateinit var binding: FragmentCitiesBinding
-    private lateinit var getCitiesUseCase: GetCitiesUseCase
     private var cityListAdapter: CityListAdapter? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val location = MutableLiveData<Location?>()

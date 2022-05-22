@@ -17,10 +17,6 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerAppComponent
-            .builder()
-            .appModule(AppModule())
-            .netModule(NetModule())
-            .build()
+        appComponent = DaggerAppComponent.factory().create(this)
     }
 }

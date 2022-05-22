@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">JF</string>
     <string name="posts">Лента</string>
-    <string name="cities">Ближайшие города</string>
+    <string name="localities">Ближайшие города</string>
     <string name="other">Дополнительно</string>
     <string name="error_getting_location">Не удалось получить местоположение</string>
     <string name="error_check_permission">Будут показаны ближайшие города к Москве.

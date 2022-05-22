@@ -6,6 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".features.registration.presentation.RegistrationFragment">
 
+    <TextView
+        android:id="@+id/tv_jf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/jf_"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="200sp"
+        tools:layout_editor_absoluteX="174dp"
+        tools:layout_editor_absoluteY="188dp" />
+
+    <TextView
+        android:id="@+id/tv_registration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/registration"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_jf"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="174dp"
+        tools:layout_editor_absoluteY="188dp" />
+
     <EditText
         android:id="@+id/et_nick"
         android:layout_width="match_parent"
@@ -16,7 +42,7 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_registration"
         tools:layout_editor_absoluteX="60dp"
         tools:layout_editor_absoluteY="53dp" />
 
@@ -68,11 +94,25 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:text="@string/registration"
+        android:background="#6fa8dc"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_confirmed_password"
         tools:layout_editor_absoluteX="102dp"
         tools:layout_editor_absoluteY="165dp" />
+
+    <TextView
+        android:id="@+id/tv_is_have_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/is_have_account"
+        android:textColor="@color/black"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_registration" />
 
     <TextView
         android:id="@+id/tv_login"
@@ -81,8 +121,12 @@
         android:layout_margin="8dp"
         android:text="@string/login"
         android:textColor="#6fa8dc"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_is_have_account"
         app:layout_constraintTop_toBottomOf="@id/btn_registration"
         tools:layout_editor_absoluteX="174dp"
         tools:layout_editor_absoluteY="188dp" />
